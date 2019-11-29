@@ -7,9 +7,31 @@ export class Scene1 extends Phaser.Scene {
 
   preload() {
     this.load.image('background', '/images/example2/images/starbackground.jpg');
-    this.load.image('ship', '/images/example2/images/ship.png');
-    this.load.image('ship2', '/images/example2/images/ship2.png');
-    this.load.image('ship3', '/images/example2/images/ship3.png')
+
+    this.load.spritesheet('ship', '/images/example2/spritesheets/ship.png', {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+
+    this.load.spritesheet('ship2', '/images/example2/spritesheets/ship2.png', {
+      frameWidth: 32,
+      frameHeight: 16
+    });
+
+    this.load.spritesheet('ship3', '/images/example2/spritesheets/ship3.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+
+    this.load.spritesheet('explosion', '/images/example2/spritesheets/explosion.png', {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+
+    this.load.spritesheet("power-up", "/images/example2/spritesheets/power-up.png",{
+      frameWidth: 16,
+      frameHeight: 16
+    });
   }
 
   create() {
