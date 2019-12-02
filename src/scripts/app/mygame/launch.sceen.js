@@ -17,8 +17,8 @@ export class LaunchScene extends Phaser.Scene {
   create() {
     this.background = this.add.image(window.innerWidth / 2, window.innerHeight / 2, 'background');
     this.logo = this.add.image(window.innerWidth / 2, -200, 'logo');
+    
     this.input.setDefaultCursor('url(/images/mygame/cursor1.png), pointer');
-
     this.anims.create({
       key: 'playbtnanim',
       frames: [
@@ -30,31 +30,43 @@ export class LaunchScene extends Phaser.Scene {
       repeat: -1  
     });
 
-    this.btnStartGame = this.add.sprite(window.innerWidth / 2, window.innerHeight/ 2 + 200, 'play')
+    this.btnStartGame = this.add.sprite(window.innerWidth / 2, window.innerHeight + 200, 'play')
     this.btnStartGame.scaleY = 0.8;
     this.btnStartGame.scaleX = 0.8;
-    this.btnStartGame.alpha = 0;
-    
-    this.btnStartGame.setInteractive({
-      // cursor: 'url(/images/mygame/cursor1.png), pointer'
-    });
+
+    this.animateLogo();
+    this.btnStartGame.setInteractive();
     
     this.btnStartGame.on('pointerdown', () => {
-      alert('launching new game')
+      this.scene.start('mainGame');
     });
   }
 
-  update() {
-    if (this.logo.y < 200) {
-      this.logo.y+=10;
-    } else if (this.btnStartGame.alpha < 1) {
-      this.btnStartGame.alpha += 0.01;
-      return;
-    } 
-    
-    if (!this.playing) {
-      this.playing = true;
-      this.btnStartGame.play('playbtnanim')
-    }
+  animateLogo() {
+    return this.tweens.add({
+      targets: this.logo,
+      y: {
+        value: 200,
+        duration: 300,
+        ease: 'Circ.easeOut'
+      },
+      onComplete: () => {
+        this.animatePlayButton();
+      }
+    });
+  }
+
+  animatePlayButton() {
+    return this.tweens.add({
+      targets: this.btnStartGame,
+      y: {
+        value: window.innerHeight / 2 + 200,
+        duration: 300,
+        ease: 'Linear'
+      },
+      onComplete: () => {
+        this.btnStartGame.play('playbtnanim');
+      }
+    });
   }
 }
