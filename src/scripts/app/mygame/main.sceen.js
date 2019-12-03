@@ -1,28 +1,100 @@
 
 export class MainScene extends Phaser.Scene {
   constructor() {
-    super('mainGame')
+    super('mainGame');
+
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.heroes = ['red', 'matilda', 'bomb', 'chuck'];
   }
 
   preload() {
-    //loading my heroes on game field
-    this.load.image('hero', '/images/mygame/hero.png');
-    this.load.image('hero2', '/images/mygame/hero2.png');
+    this.load.image('card1', '/images/mygame/card1.png');
+    this.load.image('card2', '/images/mygame/card2.png');
+    this.load.image('card3', '/images/mygame/card3.png');
+    this.load.image('card4', '/images/mygame/card4.png');
+    this.load.image('card1_hovered', '/images/mygame/card1_hovered.png');
+    this.load.image('card2_hovered', '/images/mygame/card2_hovered.png');
+    this.load.image('card3_hovered', '/images/mygame/card3_hovered.png');
+    this.load.image('card4_hovered', '/images/mygame/card4_hovered.png');
+    this.load.image('red', '/images/mygame/red.png');
+    this.load.image('matilda', '/images/mygame/matilda.png');
+    this.load.image('bomb', '/images/mygame/bomb.png');
+    this.load.image('chuck', '/images/mygame/chuck.png');
   }
 
   create() {
-    this.background = this.add.image(window.innerWidth / 2, window.innerHeight / 2, 'background');
-    this.hero = this.add.image(200, window.innerHeight - 300, 'hero');
-    this.hero2 = this.add.image(400, window.innerHeight - 300, 'hero');
+    this.background = this.add.image(this.width / 2, this.height / 2, 'background');
+    this.initCards();
+    
+    this.heroes.forEach((_, index) => {
+      const cardName = `card${index+1}`;
 
-    this.group = this.add.group();
-    this.group.add(this.hero);
-    this.group.add(this.hero2);
+      this.anims.create({
+        key: `${cardName}over`,
+        frames: [
+          { key: cardName},
+          { key: `${cardName}_hovered`}
+        ],
+        frameRate: 10,
+        ease: 'Sine.easeOut'
+      });
 
-    this.group.getChildren().forEach(hero => {
-      hero.angle = Phaser.Math.Between(-15, 15);
-      this.wiggleHero(hero, Phaser.Math.Between(500, 700));
+      this.anims.create({
+        key: `${cardName}out`,
+        frames: [
+          { key: `${cardName}_hovered`},
+          { key: cardName}
+        ],
+        frameRate: 10,
+        ease: 'Sine.easeOut'
+      })
     });
+  }
+  
+  initCards() {
+    this.cards = this.add.group();
+    //TODO no animations for cards over/hover -> just create cards via frames
+    this.cards.add(this.add.sprite(-400, this.height - 200, 'card1'));
+    this.cards.add(this.add.sprite(-400, this.height - 200, 'card2'));
+    this.cards.add(this.add.sprite(-400, this.height - 200, 'card3'));
+    this.cards.add(this.add.sprite(-400, this.height - 200, 'card4'));
+
+    this.cards.getChildren().forEach((card, index) => {
+      card.scaleX = 0.5; 
+      card.scaleY = 0.5;
+      card.setInteractive();
+
+      card.on('pointerover', () => {
+        //set frame card.setFrame(index)
+        card.play(`card${index + 1}over`);
+      })
+      card.on('pointerout', () => {
+        card.play(`card${index + 1}out`);
+        //set frame card.setFrame(index)
+      });
+
+      this.tweens.add({
+        targets: card,
+        x: {
+          value: 220*(index + 1),
+          ease: 'Sine.easeOut',
+          duration: 400
+        },
+        onComplete: () => {
+          this.initHero(index);
+        }
+      })
+    });
+  }
+
+  initHero(index) {
+    const hero = this.add.image(220 * (index + 1), this.height - 200, this.heroes[index]);
+    hero.alpha = 0;
+    hero.angle = Phaser.Math.Between(-15, 15);
+    hero.scaleX = 0.5; 
+    hero.scaleY = 0.5;
+    this.wiggleHero(hero, Phaser.Math.Between(500, 800));
   }
 
   wiggleHero(hero, duration) {
@@ -34,6 +106,14 @@ export class MainScene extends Phaser.Scene {
         duration: duration,
         yoyo: true,
         repeat: -1
+      },
+      alpha: {
+        value: {
+          from: 0,
+          to: 1,
+          ease: 'Linear',
+          duration: 300
+        }
       }
     });
   }

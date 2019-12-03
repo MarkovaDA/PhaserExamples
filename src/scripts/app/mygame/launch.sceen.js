@@ -15,12 +15,29 @@ export class LaunchScene extends Phaser.Scene {
   }
 
   create() {
+    // this.scene.start('mainGame'); //TODO: delete after
+
     this.background = this.add.image(window.innerWidth / 2, window.innerHeight / 2, 'background');
     this.logo = this.add.image(window.innerWidth / 2, -200, 'logo');
     
-    this.input.setDefaultCursor('url(/images/mygame/cursor1.png), pointer');
+    this.input.setDefaultCursor('url(/images/mygame/cursor.png), pointer');
+
+    this.initPlayButton();
+    this.animateLogo();
+  }
+
+  initPlayButton() {
+    this.button = this.add.sprite(window.innerWidth / 2, window.innerHeight + 200, 'play');
+    this.button.scaleY = 0.8;
+    this.button.scaleX = 0.8;
+    this.button.setInteractive();
+
+    this.button.on('pointerdown', () => {
+      this.scene.start('mainGame');
+    });
+
     this.anims.create({
-      key: 'playbtnanim',
+      key: 'shining',
       frames: [
         { key: 'play' },
         { key: 'play2' },
@@ -29,20 +46,10 @@ export class LaunchScene extends Phaser.Scene {
       frameRate: 8,
       repeat: -1  
     });
-
-    this.btnStartGame = this.add.sprite(window.innerWidth / 2, window.innerHeight + 200, 'play')
-    this.btnStartGame.scaleY = 0.8;
-    this.btnStartGame.scaleX = 0.8;
-
-    this.animateLogo();
-    this.btnStartGame.setInteractive();
-    
-    this.btnStartGame.on('pointerdown', () => {
-      this.scene.start('mainGame');
-    });
   }
 
   animateLogo() {
+
     return this.tweens.add({
       targets: this.logo,
       y: {
@@ -58,14 +65,14 @@ export class LaunchScene extends Phaser.Scene {
 
   animatePlayButton() {
     return this.tweens.add({
-      targets: this.btnStartGame,
+      targets: this.button,
       y: {
         value: window.innerHeight / 2 + 200,
         duration: 300,
         ease: 'Linear'
       },
       onComplete: () => {
-        this.btnStartGame.play('playbtnanim');
+        this.button.play('shining');
       }
     });
   }
