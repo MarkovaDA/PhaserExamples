@@ -15,7 +15,7 @@ export class LaunchScene extends Phaser.Scene {
   }
 
   create() {
-    // this.scene.start('mainGame'); //TODO: delete after
+    this.scene.start('mainGame'); //TODO: delete after
 
     this.background = this.add.image(window.innerWidth / 2, window.innerHeight / 2, 'background');
     this.logo = this.add.image(window.innerWidth / 2, -200, 'logo');
@@ -49,7 +49,6 @@ export class LaunchScene extends Phaser.Scene {
   }
 
   animateLogo() {
-
     return this.tweens.add({
       targets: this.logo,
       y: {

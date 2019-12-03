@@ -9,6 +9,8 @@ export class MainScene extends Phaser.Scene {
   }
 
   preload() {
+    // this.load.image('balance_txt', '/images/mygame/balance.png');
+    // this.load.image('bet_txt',  '/images/mygame/bet.png');
     this.load.image('card1', '/images/mygame/card1.png');
     this.load.image('card2', '/images/mygame/card2.png');
     this.load.image('card3', '/images/mygame/card3.png');
@@ -25,6 +27,9 @@ export class MainScene extends Phaser.Scene {
 
   create() {
     this.background = this.add.image(this.width / 2, this.height / 2, 'background');
+    // this.add.image(100, 200, 'balance_txt').setOrigin(0);
+    // this.add.image(100, 300, 'bet_txt').setOrigin(0);
+
     this.initCards();
     
     this.heroes.forEach((_, index) => {
@@ -54,7 +59,7 @@ export class MainScene extends Phaser.Scene {
   
   initCards() {
     this.cards = this.add.group();
-    //TODO no animations for cards over/hover -> just create cards via frames
+    // TODO may be make with load spritesheet
     this.cards.add(this.add.sprite(-400, this.height - 200, 'card1'));
     this.cards.add(this.add.sprite(-400, this.height - 200, 'card2'));
     this.cards.add(this.add.sprite(-400, this.height - 200, 'card3'));
@@ -64,20 +69,19 @@ export class MainScene extends Phaser.Scene {
       card.scaleX = 0.5; 
       card.scaleY = 0.5;
       card.setInteractive();
-
+      
       card.on('pointerover', () => {
         //set frame card.setFrame(index)
         card.play(`card${index + 1}over`);
       })
       card.on('pointerout', () => {
         card.play(`card${index + 1}out`);
-        //set frame card.setFrame(index)
       });
 
       this.tweens.add({
         targets: card,
         x: {
-          value: 220*(index + 1),
+          value: 100 + 220*(index + 1),
           ease: 'Sine.easeOut',
           duration: 400
         },
@@ -89,7 +93,7 @@ export class MainScene extends Phaser.Scene {
   }
 
   initHero(index) {
-    const hero = this.add.image(220 * (index + 1), this.height - 200, this.heroes[index]);
+    const hero = this.add.image(100 + 220 * (index + 1), this.height - 200, this.heroes[index]);
     hero.alpha = 0;
     hero.angle = Phaser.Math.Between(-15, 15);
     hero.scaleX = 0.5; 
