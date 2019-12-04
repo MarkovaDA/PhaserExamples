@@ -77,7 +77,7 @@ export class MainScene extends Phaser.Scene {
       card.on('pointerout', () => {
         card.play(`card${index + 1}out`);
       });
-
+      //we can animate all the cards here
       this.tweens.add({
         targets: card,
         x: {
