@@ -26,12 +26,21 @@ export class ReelScene extends Phaser.Scene {
     const tile4 = this.add.tileSprite(300, 800, 200, 200, 'heroes');
     
     this.reel.addMultiple([tile1, tile2, tile3, tile4]);
+    this.resetPositions();
+
     button.setInteractive({cursor: 'pointer'});
     button.on('pointerdown', this.startReel);
   }
 
   startReel() {
-    this.reel.getChildren().forEach(tile => tile.tilePositionX = 0);
+    this.resetPositions();
+    this.tweens.add({
+      targets: this.reel.getChildren(),
+      tilePositionX: 0,
+      duration: 300,
+      ease: 'Linear',
+      onStart: this.stopReel
+    });
 
     this.scrollTween = this.tweens.add({
       targets: this.reel.getChildren(),
@@ -66,5 +75,9 @@ export class ReelScene extends Phaser.Scene {
         });
       });
     }, 2000);
+  }
+
+  resetPositions() {
+    this.reel.getChildren().forEach((tile, index) => tile.tilePositionX = -200 * index);
   }
 }
